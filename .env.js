@@ -1,5 +1,5 @@
 // # Spotify API keys
 
-SPOTIFY_ID=your-spotify-id
-SPOTIFY_SECRET=your-spotify-secret
+SPOTIFY_ID="01e4d180daec4fa7bbfabd0fa881897d";
+SPOTIFY_SECRET="1ba3895fae46404890e6b096ed91951e";
 
