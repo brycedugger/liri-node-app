@@ -50,14 +50,15 @@
 
 
 
-// require("dotenv").config();
+require("dotenv").config();
 
 var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 console.log(keys)
 
 var spotify = new Spotify({
-
+    id: id,
+    secret: secret
   });
 
 var song = process.argv[2];
