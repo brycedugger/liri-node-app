@@ -5,27 +5,29 @@
 //movie-this
 //do-what-it-says
 
+var axios = require("axios");
+var moment = require('moment');
+
+require("dotenv").config();
+var keys = require("./keys.js");
+var Spotify = require('node-spotify-api');
+
+var fs = require("fs");
+
 var command = process.argv[2]
-var song;
-var movie;
 
 switch (command){
     case "concert-this":
         concertThis();
         break;
     case "spotify-this-song":
-        // if(isEmpty(process.argv[3])) {
-        //     var song = "the+sign";
-        // } else {
-            spotifyThis();
-        // }
+        spotifyThis();
         break;
     case "movie-this":
-        // if(isEmpty(process.argv[3])) {
-        //     var movie = "mr+nobody";
-        // } else {
-            movieThis();
-        // }
+        movieThis();
+        break;
+    case "do-what-it-says":
+        doThis();
         break;
 }
 
@@ -35,9 +37,6 @@ switch (command){
 
 function concertThis() {
 
-    var axios = require("axios");
-    var moment = require('moment');
-
     var artist = process.argv[3];
 
     axios.get("https://rest.bandsintown.com/artists/" + artist +  "/events?app_id=codingbootcamp").then(
@@ -45,6 +44,7 @@ function concertThis() {
         console.log("Name of Venue: " + response.data[0].venue.name);
         console.log("Venue Location: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
         console.log("Date of Event (MM/DD/YYYY): " + moment(response.data[0].datetime).format('MM/DD/YYYY'));
+        console.log("---------------------------------------------------------");
     })
     .catch(function(error) {
         if (error.response) {
@@ -69,20 +69,15 @@ function concertThis() {
 
 };
 
-
-
 //   2. `node liri.js spotify-this-song '<song name here>'`
 
 //    * need to apply application so that it can take multi word arguement?
-//    MISSING* If no song is provided then your program will default to "The Sign" by Ace of Base.
+//    * need to fix api calling for spotify id and secret user api.
+//    * need to write function to allow additional responses, not just the first one.
 
 
-function spotifyThis() {
+function spotifyThis(song) {
 
-    require("dotenv").config();
-
-    var keys = require("./keys.js");
-    var Spotify = require('node-spotify-api');
     console.log(keys)
 
     var spotify = new Spotify({
@@ -90,19 +85,24 @@ function spotifyThis() {
         secret: secret
     });
 
-    var song = process.argv[3];
+    if(process.argv.length < 4) {
+        song = "the+sign";
+    } else {
+        song = process.argv[3];
+    }
 
     spotify
     .search({ type: 'track', query: song })
     .then(function(response) {
         //Artist
-        console.log(response.tracks.items[0].artists[0].name);
+        console.log("Song Artist: " + response.tracks.items[0].artists[0].name);
         // Song Name
-        console.log(response.tracks.items[0].name);
+        console.log("Song Name: " + response.tracks.items[0].name);
         //Spotify Link to Song
-        console.log(response.tracks.items[0].artists[0].external_urls.spotify);
+        console.log("Open Spotify " + response.tracks.items[0].artists[0].external_urls.spotify);
         //Album from Song
-        console.log(response.tracks.items[0].album.name);
+        console.log("Song Album: " + response.tracks.items[0].album.name);
+        console.log("---------------------------------------------------------");
     })
     .catch(function(err) {
         console.log(err);
@@ -110,18 +110,20 @@ function spotifyThis() {
 
 };
 
-
-
 // 3. `node liri.js movie-this '<movie name here>'`
 
-//multi name functionality required
-//     * If the user doesn't type a movie in, the program will output data for the movie 'Mr.Nobody.'
+//    * need to apply application so that it can take multi word arguement?
 
 
-function movieThis() {
 
-    var axios = require("axios");
-    var movie = process.argv[3];
+function movieThis(movie) {
+
+    if(process.argv.length < 4) {
+        movie = "mr+nobody";
+    } else {
+        movie = process.argv[3];
+        return movie;
+    }
 
     axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy").then(
     function(response) {
@@ -133,6 +135,7 @@ function movieThis() {
         console.log("Language: " + response.data.Language);
         console.log("Plot: " + response.data.Plot);
         console.log("Actors: " + response.data.Actors);
+        console.log("---------------------------------------------------------");
     }
     );
 };
@@ -145,3 +148,22 @@ function movieThis() {
 
 //      * Edit the text in random.txt to test out the feature for movie-this and concert-this.
 
+function doThis() {
+
+    fs.readFile("random.txt", "utf8", function(err, data) {
+        if (err) {
+        return console.log(err);
+        }
+    
+        // Break the string down by comma separation and store the contents into the output array.
+        var output = data.split(",");
+    
+        // Loop Through the newly created output array
+        for (var i = 0; i < output.length; i++) {
+    
+        // Print each element (item) of the array/
+        console.log(output[i]);s
+        }
+    });
+
+};
