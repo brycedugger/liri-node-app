@@ -78,11 +78,9 @@ function concertThis() {
 
 function spotifyThis(song) {
 
-    console.log(keys)
-
     var spotify = new Spotify({
-        id: id,
-        secret: secret
+        id: keys.spotify.id,
+        secret: keys.spotify.secret
     });
 
     if(process.argv.length < 4) {
@@ -162,7 +160,7 @@ function doThis() {
         for (var i = 0; i < output.length; i++) {
     
         // Print each element (item) of the array/
-        console.log(output[i]);s
+        console.log(output[i]);
         }
     });
 
