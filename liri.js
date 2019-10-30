@@ -33,8 +33,6 @@ switch (command){
 
 // 1. `node liri.js concert-this <artist/band name here>`
 
-//    * need to apply application so that it can take multi word arguement?
-
 function concertThis() {
 
     var artist = process.argv[3];
@@ -71,11 +69,6 @@ function concertThis() {
 
 //   2. `node liri.js spotify-this-song '<song name here>'`
 
-//    * need to apply application so that it can take multi word arguement?
-//    * need to fix api calling for spotify id and secret user api.
-//    * need to write function to allow additional responses, not just the first one.
-
-
 function spotifyThis(song) {
 
     var spotify = new Spotify({
@@ -109,10 +102,6 @@ function spotifyThis(song) {
 };
 
 // 3. `node liri.js movie-this '<movie name here>'`
-
-//    * need to apply application so that it can take multi word arguement?
-
-
 
 function movieThis(movie) {
 
@@ -155,13 +144,40 @@ function doThis() {
     
         // Break the string down by comma separation and store the contents into the output array.
         var output = data.split(",");
-    
-        // Loop Through the newly created output array
-        for (var i = 0; i < output.length; i++) {
-    
-        // Print each element (item) of the array/
-        console.log(output[i]);
-        }
+        var command = output[0];
+        var input = output[1];
+        var songArr = input.split(" ");
+        // console.log (songArr[0] + "+" + songArr[1] + "+" + songArr[2] + "+" + songArr[3] + "+" + songArr[4]);
+        var song = songArr[0] + "+" + songArr[1] + "+" + songArr[2] + "+" + songArr[3] + "+" + songArr[4];
+        console.log (song);
+        
+        spotifyThisFS(song);
+    });
+
+};
+
+function spotifyThisFS(song) {
+
+    var spotify = new Spotify({
+        id: keys.spotify.id,
+        secret: keys.spotify.secret
+    });
+
+    spotify
+    .search({ type: 'track', query: song })
+    .then(function(response) {
+        //Artist
+        console.log("Song Artist: " + response.tracks.items[0].artists[0].name);
+        // Song Name
+        console.log("Song Name: " + response.tracks.items[0].name);
+        //Spotify Link to Song
+        console.log("Open Spotify " + response.tracks.items[0].artists[0].external_urls.spotify);
+        //Album from Song
+        console.log("Song Album: " + response.tracks.items[0].album.name);
+        console.log("---------------------------------------------------------");
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 
 };
