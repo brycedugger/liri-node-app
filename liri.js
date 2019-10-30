@@ -109,7 +109,6 @@ function movieThis(movie) {
         movie = "mr+nobody";
     } else {
         movie = process.argv[3];
-        return movie;
     }
 
     axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy").then(
@@ -144,12 +143,13 @@ function doThis() {
     
         // Break the string down by comma separation and store the contents into the output array.
         var output = data.split(",");
+        console.log (output);
+
         var command = output[0];
         var input = output[1];
         var songArr = input.split(" ");
         // console.log (songArr[0] + "+" + songArr[1] + "+" + songArr[2] + "+" + songArr[3] + "+" + songArr[4]);
         var song = songArr[0] + "+" + songArr[1] + "+" + songArr[2] + "+" + songArr[3] + "+" + songArr[4];
-        console.log (song);
         
         spotifyThisFS(song);
     });
@@ -179,5 +179,4 @@ function spotifyThisFS(song) {
     .catch(function(err) {
         console.log(err);
     });
-
 };
